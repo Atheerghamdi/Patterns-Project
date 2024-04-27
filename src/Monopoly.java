@@ -5,7 +5,7 @@ public class Monopoly {
 	Board board;
 
 	public Monopoly(int totalPlayer) {
-		board = Board.getInstance(totalPlayer); // Using Singleton pattern to get the instance of Board
+		board = new Board(totalPlayer);
 	}
 
 	public static void main(String[] args) {
@@ -17,11 +17,12 @@ public class Monopoly {
 				System.out.println("How many people are playing?");
 				System.out.print("Players (2 - 8): ");
 				totalPlayer = scanner.nextInt();
-			} catch (Exception e) {
+			}
+			catch(Exception e) {
 				System.err.println("Error: Number too large.");
 				continue;
 			}
-			if (totalPlayer > 8) {
+			if(totalPlayer > 8) {
 				System.err.println("Error: Invalid player count.");
 			}
 		}
@@ -33,27 +34,25 @@ public class Monopoly {
 	public void startGame() {
 		System.out.println("Game start!");
 		System.out.println("========");
-		while (!isGameEnd() && !board.hasWinner()) {
-			if (!board.getCurrentPlayer().isBrokeOut()) {
+		while (!isGameEnd() && !board.hasWinner()){
+			if(!board.getCurrentPlayer().isBrokeOut()){
 				int face = board.getCurrentPlayer().tossDie(die);
 				board.movePlayer(board.getCurrentPlayer(), face);
 			}
 			board.nextTurn();
 		}
 		System.out.println("========");
-		if (board.hasWinner()) {
+		if(board.hasWinner()){
 			System.out.println(board.getWinner().getName() + " is won by don't brokeout!");
-		} else {
+		}else{
 			System.out.println(board.getMaxMoneyPlayer().getName() + " is won by have most money!");
 		}
 		System.out.println("Game over!");
 	}
 
 	public boolean isGameEnd() {
-		for (Player player : board.getPlayers()) {
-			if (player.getTotalWalk() < 20) {
-				return false;
-			}
+		for(Player player:board.getPlayers()){
+			if(player.getTotalWalk() < 20){ return false; }
 		}
 		return true;
 	}
